@@ -38,13 +38,6 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
             res.send(allProduct);
         });
 
-        // Get all products from the mongodb database
-        app.get('/products2', async (req, res) => {
-            const findProducts = productsCollection.find({});
-            const allProduct = await findProducts.toArray();
-            res.send(allProduct);
-        });
-
         // Get all products and filter by category from the mongodb database
         app.get('/products/:category', async (req, res) => {
             const cat = req.params.category;
@@ -72,6 +65,16 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
             if(matchedProducts){
                 res.send(matchedProducts);
             }
+        });
+        
+        // Get all products and filter by size from the mongodb database
+        app.get('/products/filteredProducts/:minPrice/:maxPrice', async (req, res) => {
+            const findProducts = productsCollection.find({});
+            const allProducts = await findProducts.toArray();
+            const minimumPrice = req.params.minPrice;
+            const maximumPrice = req.params.maxPrice;
+            const filteredProducts = allProducts.filter(product => product.salePrice >= Number(minimumPrice) && product.salePrice <= Number(maximumPrice));
+            res.send(filteredProducts);            
         });
     }
 
