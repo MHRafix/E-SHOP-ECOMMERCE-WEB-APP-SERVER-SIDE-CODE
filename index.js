@@ -35,7 +35,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         // Save the details of product to the database
         app.post('/addToCartList', async (req, res) => {
             const cartedProduct = req.body;
-            const result = await orderedFoodsCollection.insertOne(cartedProduct);
+            const result = await cartedProductsCollection.insertOne(cartedProduct);
             res.json(result);
         });
         
