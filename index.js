@@ -38,13 +38,19 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
             res.send(allProduct);
         });
 
-        // Get all products from the mongodb database
+        // Get selected product data from the mongodb database for showing to single product details page
         app.get('/shop/singleProducts/:productId', async (req, res) => {
             const uniqueId = req.params.productId;
             const query = { _id:ObjectId(uniqueId) };
             const findProducts = productsCollection.find(query);
-            const result = await findProducts.toArray();
-            res.json(result);
+            const selectedProduct = await findProducts.toArray();
+            let result;
+            for(const product of selectedProduct){
+                result = product;
+            }
+            if(result){
+                res.send(result);
+            }
         });
 
         // Get all products and filter by category from the mongodb database
