@@ -30,6 +30,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         // Recognize the database and data collection
         const database = client.db('ESHOP'); // Database name
         const productsCollection = database.collection('Products');
+        const cartedProductsCollection = database.collection('CartedProducts');
+
+        // Save the details of product to the database
+        app.post('/addToCartList', async (req, res) => {
+            const cartedProduct = req.body;
+            const result = await orderedFoodsCollection.insertOne(cartedProduct);
+            res.json(result);
+        });
         
         // Get all products from the mongodb database
         app.get('/products', async (req, res) => {
