@@ -38,6 +38,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
             res.send(allProduct);
         });
 
+        // Get all products from the mongodb database
+        app.get('/shop/singleProducts/:productId', async (req, res) => {
+            const uniqueId = req.params.productId;
+            const query = { _id:ObjectId(uniqueId) };
+            const result = await productsCollection.find(query);
+            res.json(result);
+        });
+
         // Get all products and filter by category from the mongodb database
         app.get('/products/:category', async (req, res) => {
             const cat = req.params.category;
