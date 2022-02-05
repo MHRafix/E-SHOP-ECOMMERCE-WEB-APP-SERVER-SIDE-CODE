@@ -38,6 +38,13 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
             const result = await cartedProductsCollection.insertOne(cartedProduct);
             res.json(result);
         });
+
+        // Save the details of product to the database
+        app.post('/addToWishList', async (req, res) => {
+            const favProduct = req.body;
+            const result = await cartedProductsCollection.insertOne(favProduct);
+            res.json(result);
+        });
         
         // Get all products from the mongodb database
         app.get('/products', async (req, res) => {
