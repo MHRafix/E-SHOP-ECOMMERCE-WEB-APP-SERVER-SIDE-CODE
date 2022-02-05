@@ -46,6 +46,17 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
             res.send(allProduct);
         });
 
+        // Get all products from the mongodb database by search text
+        app.get('/products/searchedProducts/:productTitle', async (req, res) => {
+            // const query = { productTitle: searchText };
+            const findProducts = productsCollection.find({});
+            const allProducts = await findProducts.toArray();
+            const searchText = req.params.productTitle;
+            const searchedProducts = allProducts.filter(products => products.productTitle.toLowerCase().includes(searchText.toLowerCase()));
+            res.send(searchedProducts);
+        });
+
+
         // Get selected product data from the mongodb database for showing to single product details page
         app.get('/shop/singleProducts/:productId', async (req, res) => {
             const uniqueId = req.params.productId;
