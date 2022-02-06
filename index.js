@@ -31,6 +31,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         const database = client.db('ESHOP'); // Database name
         const productsCollection = database.collection('Products');
         const cartedProductsCollection = database.collection('CartedProducts');
+        const wishListProductsCollection = database.collection('CartedProducts');
 
         // Save the details of product to the database
         app.post('/addToCartList', async (req, res) => {
@@ -42,13 +43,27 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         // Save the details of product to the database
         app.post('/addToWishList', async (req, res) => {
             const favProduct = req.body;
-            const result = await cartedProductsCollection.insertOne(favProduct);
+            const result = await wishListProductsCollection.insertOne(favProduct);
             res.json(result);
         });
         
         // Get all products from the mongodb database
         app.get('/products', async (req, res) => {
             const findProducts = productsCollection.find({});
+            const allProduct = await findProducts.toArray();
+            res.send(allProduct);
+        });
+       
+        // Get all products from the mongodb database
+        app.get('/getFromCartList', async (req, res) => {
+            const findProducts = cartedProductsCollection.find({});
+            const allProduct = await findProducts.toArray();
+            res.send(allProduct);
+        });
+      
+        // Get all products from the mongodb database
+        app.get('/getFromWishList', async (req, res) => {
+            const findProducts = wishListProductsCollection.find({});
             const allProduct = await findProducts.toArray();
             res.send(allProduct);
         });
