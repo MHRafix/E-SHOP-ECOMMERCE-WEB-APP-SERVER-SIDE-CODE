@@ -67,6 +67,19 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
             const allProduct = await findProducts.toArray();
             res.send(allProduct);
         });
+        // Get all products from the mongodb database
+        app.get('/getFromCartList2', async (req, res) => {
+            const findProducts = cartedProductsCollection.find({});
+            const allProduct = await findProducts.toArray();
+            res.send(allProduct);
+        });
+      
+        // Get all products from the mongodb database
+        app.get('/getFromWishList2', async (req, res) => {
+            const findProducts = wishListProductsCollection.find({});
+            const allProduct = await findProducts.toArray();
+            res.send(allProduct);
+        });
 
         // Get all products from the mongodb database by search text
         app.get('/products/searchedProducts/:productTitle', async (req, res) => {
