@@ -31,7 +31,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         const database = client.db('ESHOP'); // Database name
         const productsCollection = database.collection('Products');
         const cartedProductsCollection = database.collection('CartedProducts');
-        const wishListProductsCollection = database.collection('CartedProducts');
+        const wishListProductsCollection = database.collection('WishListProducts');
 
         // Save the details of product to the database
         app.post('/addToCartList', async (req, res) => {
