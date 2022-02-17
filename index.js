@@ -48,10 +48,24 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         });
         
         // Get all products from the mongodb database
+        app.get('/newArrivalProducts', async (req, res) => {
+            const findProducts = productsCollection.find({});
+            const allProducts = await findProducts.limit(6).toArray();
+            res.send(allProducts);
+        });
+
         app.get('/products', async (req, res) => {
             const findProducts = productsCollection.find({});
-            const allProduct = await findProducts.toArray();
-            res.send(allProduct);
+            const allProducts = await findProducts.toArray();
+            res.send(allProducts);
+        });
+
+        // Get all products from the mongodb database
+        app.get('/saleProducts', async (req, res) => {
+            const findProducts = productsCollection.find({});
+            const allProducts = await findProducts.toArray();
+            const allSaleProducts = allProducts.filter(products => products.salePrice === '0');
+            res.send(allSaleProducts);
         });
        
         // Get all products from the mongodb database
