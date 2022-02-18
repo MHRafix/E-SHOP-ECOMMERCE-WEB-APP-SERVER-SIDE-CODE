@@ -54,7 +54,15 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
             res.send(allProducts);
         });
 
+        // All products for shop page get her from database
         app.get('/products', async (req, res) => {
+            const findProducts = productsCollection.find({});
+            const allProducts = await findProducts.toArray();
+            res.send(allProducts);
+        });
+
+        // All products for categories and sizes from database
+        app.get('/allProductsForCatAndSizes', async (req, res) => {
             const findProducts = productsCollection.find({});
             const allProducts = await findProducts.toArray();
             res.send(allProducts);
