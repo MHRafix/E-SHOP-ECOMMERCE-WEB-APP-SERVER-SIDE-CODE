@@ -77,15 +77,17 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         });
        
         // Get all products from the mongodb database
-        app.get('/getFromCartList', async (req, res) => {
-            const findProducts = cartedProductsCollection.find({});
+        app.get('/getFromCartList/:email', async (req, res) => {
+            const query = {userEmail: req.params.email};
+            const findProducts = cartedProductsCollection.find(query);
             const allProduct = await findProducts.toArray();
             res.send(allProduct);
         });
       
         // Get all products from the mongodb database
-        app.get('/getFromWishList', async (req, res) => {
-            const findProducts = wishListProductsCollection.find({});
+        app.get('/getFromWishList/:email', async (req, res) => {
+            const query = {userEmail: req.params.email};
+            const findProducts = wishListProductsCollection.find(query);
             const allProduct = await findProducts.toArray();
             res.send(allProduct);
         });
@@ -173,7 +175,7 @@ run().catch(console.dir);
 
 // Check server is running or not
 app.get('/', (req, res) => {
-    res.send('Running ESHOP Server!');
+    res.send('RUNNIG ESHOP SERVER!');
 });
 
 // Listen server what we do here
