@@ -100,6 +100,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
             res.send(allProduct);
         });
 
+        // Get all ordered products from the mongodb database
+        app.get('/allOrders/myOrders/:email', async (req, res) => {
+            const query = {userEmail: req.params.email};
+            const findOrders = allOrderedProductsCollection.find(query);
+            const myOrders = await findOrders.toArray();
+            res.send(myOrders);
+        });
+
         // Get all products from the mongodb database by search text
         app.get('/products/searchedProducts/:productTitle', async (req, res) => {
             // const query = { productTitle: searchText };
