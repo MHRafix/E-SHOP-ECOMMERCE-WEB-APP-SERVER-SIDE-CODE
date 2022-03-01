@@ -1,200 +1,63 @@
-const express = require('express');
-
-// Import mongodb, cors, objectId, stripe and dotenv
-const { MongoClient } = require('mongodb');
-const cors = require('cors');
-require('dotenv').config();
-const ObjectId = require('mongodb').ObjectId;
-
-// App and Port
+// external imports here
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
 const app = express();
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
+const mongoose = require("mongoose");
 
-// MidleWere
+// internal imports here
+const {
+  notFoundRoute,
+  errorHandler,
+} = require("./middleware/common/errorHandler");
+const productsRoute = require("./routes/products.route");
+const newArrivalRoute = require("./routes/newArrival.route");
+const saleProductsRoute = require("./routes/saleProducts.route");
+const cartProductsRoute = require("./routes/cartProducts.route");
+const individualOrderRoute = require("./routes/individualOrder.route");
+const searchResultRoute = require("./routes/searchResult.route");
+const wishListProductsRoute = require("./routes/wishListProducts.route");
+const singleProductRoute = require("./routes/singleProduct.route");
+const categorizeProductsRoute = require("./routes/categorizeProducts.route");
+
+// MidleWere and request parser
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Server to database connection uri
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ttpfp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+// database connection here
+mongoose
+  .connect(process.env.MONGODB__CONNECTION__STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Database connection successfully!"))
+  .catch((err) => console.log(err));
 
-
-/********************************************
- * Node server crud operation start from here
- ********************************************/
-
- async function run() {
-    try {
-        await client.connect();
-
-        // Recognize the database and data collection
-        const database = client.db('ESHOP'); // Database name
-        const productsCollection = database.collection('Products');
-        const cartedProductsCollection = database.collection('CartedProducts');
-        const wishListProductsCollection = database.collection('WishListProducts');
-        const allOrderedProductsCollection = database.collection('AllOrderedProducts');
-
-        // Save the details of product to the database
-        app.post('/addToCartList', async (req, res) => {
-            const cartedProduct = req.body;
-            const result = await cartedProductsCollection.insertOne(cartedProduct);
-            res.json(result);
-        });
-
-        // Save the details of customer and products to the database
-        app.post('/allCustomersOrders', async (req, res) => {
-            const ordersData = req.body;
-            const result = await allOrderedProductsCollection.insertOne(ordersData);
-            res.json(result);
-        });
-
-        // Save the details of product to the database
-        app.post('/addToWishList', async (req, res) => {
-            const favProduct = req.body;
-            const result = await wishListProductsCollection.insertOne(favProduct);
-            res.json(result);
-        });
-        
-        // Get all products from the mongodb database
-        app.get('/newArrivalProducts', async (req, res) => {
-            const findProducts = productsCollection.find({});
-            const allProducts = await findProducts.limit(6).toArray();
-            res.send(allProducts);
-        });
-
-        // All products for shop page get her from database
-        app.get('/products', async (req, res) => {
-            const findProducts = productsCollection.find({});
-            const allProducts = await findProducts.toArray();
-            res.send(allProducts);
-        });
-
-        // All products for categories and sizes from database
-        app.get('/allProductsForCatAndSizes', async (req, res) => {
-            const findProducts = productsCollection.find({});
-            const allProducts = await findProducts.toArray();
-            res.send(allProducts);
-        });
-
-        // Get all products from the mongodb database
-        app.get('/saleProducts', async (req, res) => {
-            const findProducts = productsCollection.find({});
-            const allProducts = await findProducts.toArray();
-            const allSaleProducts = allProducts.filter(products => products.salePrice === '0');
-            res.send(allSaleProducts);
-        });
-       
-        // Get all products from the mongodb database
-        app.get('/getFromCartList/:email', async (req, res) => {
-            const query = {userEmail: req.params.email};
-            const findProducts = cartedProductsCollection.find(query);
-            const allProduct = await findProducts.toArray();
-            res.send(allProduct);
-        });
-      
-        // Get all products from the mongodb database
-        app.get('/getFromWishList/:email', async (req, res) => {
-            const query = {userEmail: req.params.email};
-            const findProducts = wishListProductsCollection.find(query);
-            const allProduct = await findProducts.toArray();
-            res.send(allProduct);
-        });
-
-        // Get all ordered products from the mongodb database
-        app.get('/allOrders/myOrders/:email', async (req, res) => {
-            const query = {userEmail: req.params.email};
-            const findOrders = allOrderedProductsCollection.find(query);
-            const myOrders = await findOrders.toArray();
-            res.send(myOrders);
-        });
-
-        // Get all products from the mongodb database by search text
-        app.get('/products/searchedProducts/:productTitle', async (req, res) => {
-            // const query = { productTitle: searchText };
-            const findProducts = productsCollection.find({});
-            const allProducts = await findProducts.toArray();
-            const searchText = req.params.productTitle;
-            const searchedProducts = allProducts.filter(products => products.productTitle.toLowerCase().includes(searchText.toLowerCase()));
-            res.send(searchedProducts);
-        });
-
-
-        // Get selected product data from the mongodb database for showing to single product details page
-        app.get('/shop/singleProducts/:productId', async (req, res) => {
-            const uniqueId = req.params.productId;
-            const query = { _id:ObjectId(uniqueId) };
-            const findProducts = productsCollection.find(query);
-            const selectedProduct = await findProducts.toArray();
-            let result;
-            for(const product of selectedProduct){
-                result = product;
-            }
-            if(result){
-                res.send(result);
-            }
-        });
-
-        // Get all products and filter by category from the mongodb database
-        app.get('/products/:category', async (req, res) => {
-            const cat = req.params.category;
-            const query = { category: cat };
-            const findProducts = productsCollection.find(query);
-            const result = await findProducts.toArray();
-            res.send(result);
-        });
-
-        // Get all products and filter by size from the mongodb database
-        app.get('/products/sizedProducts/:size', async (req, res) => {
-            const findProducts = productsCollection.find({});
-            const allProducts = await findProducts.toArray();
-            const reqSize = req.params.size;
-            let sizesArr;
-            let matchedProducts = [];
-            for(const product of allProducts){
-                sizesArr = product.sizes;
-                if(sizesArr.includes(reqSize) === true){
-                    matchedProducts.push(product);
-                }else{
-                    //Nothing here
-                }
-            }
-            if(matchedProducts){
-                res.send(matchedProducts);
-            }
-        });
-        
-        // Get all products and filter by size from the mongodb database
-        app.get('/products/filteredProducts/:minPrice/:maxPrice', async (req, res) => {
-            const findProducts = productsCollection.find({});
-            const allProducts = await findProducts.toArray();
-            const minimumPrice = req.params.minPrice;
-            const maximumPrice = req.params.maxPrice;
-            const filteredProducts = allProducts.filter(product => product.salePrice >= Number(minimumPrice) && product.salePrice <= Number(maximumPrice));
-            res.send(filteredProducts);            
-        });
-    }
-
-    finally {
-        // await client.close();
-    }
-
-}
-
-// Call the async function
-run().catch(console.dir);
-
-
-/****************************************
- * Node server crud operation end to here
- ****************************************/
-
+// application routes here
+app.use("/products", productsRoute); //all products
+app.use("/newArrivalProducts", newArrivalRoute); // new arrival products
+app.use("/saleProducts", saleProductsRoute); // discount / sale products
+app.use("/getFromCartList", cartProductsRoute); // cart list products
+app.use("/allOrders/myOrders", individualOrderRoute); // my orders products
+app.use("/products/searchedProducts", searchResultRoute); // search results products
+app.use("/getFromWishList", wishListProductsRoute); // wishList products
+app.use("/shop/singleProducts", singleProductRoute); // single view products
+app.use("/products", categorizeProductsRoute); // categorize products
 
 // Check server is running or not
-app.get('/', (req, res) => {
-    res.send('RUNNIG ESHOP SERVER!');
+app.get("/", (req, res) => {
+  res.send("RUNNIG ESHOP SERVER!");
 });
 
+// 404 not found route here
+app.use(notFoundRoute);
+
+// common error handler here
+app.use(errorHandler);
+
 // Listen server what we do here
-app.listen(port, () => {
-    console.log("ESHOP app is listenning.");
+app.listen(PORT, () => {
+  console.log("ESHOP app is listenning.");
 });
