@@ -4,10 +4,10 @@ const router = express.Router();
 
 // internal exports are here
 const {
-  getIndividualOrder,
+  get__individual__order,
 } = require("../controllers/individualOrder.controller");
 
 // products get api here
-router.get("/:email", getIndividualOrder);
+router.get("/:email", get__individual__order);
 
 module.exports = router;

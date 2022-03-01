@@ -3,15 +3,9 @@ const express = require("express");
 const router = express.Router();
 
 // internal exports are here
-const {
-  getProducts,
-  postProducts,
-} = require("../controllers/products.controller");
+const { get__products } = require("../controllers/products.controller");
 
 // products get api here
-router.get("/", getProducts);
-
-// products post api here
-router.post("/", postProducts);
+router.get("/", get__products);
 
 module.exports = router;

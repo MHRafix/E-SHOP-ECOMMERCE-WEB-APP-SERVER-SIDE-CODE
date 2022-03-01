@@ -5,10 +5,17 @@ const createError = require("http-errors");
 const products__collection = require("../models/products.model");
 
 // get products api controller here
-exports.get__products = async (req, res, next) => {
+exports.get__products__by__price = async (req, res, next) => {
   try {
     const all__products = await products__collection.find();
-    res.send(all__products);
+    const minimum__price = req.params.minPrice;
+    const maximum__price = req.params.maxPrice;
+    const filtered__products = all__products.filter(
+      (product) =>
+        product.salePrice >= Number(minimum__price) &&
+        product.salePrice <= Number(maximum__price)
+    );
+    res.send(filtered__products);
   } catch (err) {
     next(err);
   }
@@ -18,7 +25,7 @@ exports.get__products = async (req, res, next) => {
 exports.postProducts = async (req, res, next) => {
   try {
     const product__data = req.body;
-    const result = await products__collection.insertOne(product__data);
+    const result = await productsCollection.insertOne(product__data);
     res.json(result);
   } catch (err) {
     next(err);

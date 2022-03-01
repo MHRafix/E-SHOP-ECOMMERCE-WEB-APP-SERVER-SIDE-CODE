@@ -1,10 +1,10 @@
 // internal imports are here
-const productsCollection = require("../models/products.model");
+const products__collection = require("../models/products.model");
 
 // get products api controller here
-exports.getSaleProducts = async (req, res, next) => {
+exports.get__sale__products = async (req, res, next) => {
   try {
-    const sale__products = await productsCollection.find();
+    const sale__products = await products__collection.find();
     res.send(sale__products);
   } catch (err) {
     next(err);

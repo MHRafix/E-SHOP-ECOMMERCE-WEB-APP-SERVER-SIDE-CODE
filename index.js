@@ -8,18 +8,20 @@ const mongoose = require("mongoose");
 
 // internal imports here
 const {
-  notFoundRoute,
-  errorHandler,
+  not__found__route,
+  error__handler,
 } = require("./middleware/common/errorHandler");
-const productsRoute = require("./routes/products.route");
-const newArrivalRoute = require("./routes/newArrival.route");
-const saleProductsRoute = require("./routes/saleProducts.route");
-const cartProductsRoute = require("./routes/cartProducts.route");
-const individualOrderRoute = require("./routes/individualOrder.route");
-const searchResultRoute = require("./routes/searchResult.route");
-const wishListProductsRoute = require("./routes/wishListProducts.route");
-const singleProductRoute = require("./routes/singleProduct.route");
-const categorizeProductsRoute = require("./routes/categorizeProducts.route");
+const products__route = require("./routes/products.route");
+const new__arrival__route = require("./routes/newArrival.route");
+const sale__products__route = require("./routes/saleProducts.route");
+const cart__products__route = require("./routes/cartProducts.route");
+const individual__order__route = require("./routes/individualOrder.route");
+const search__result__route = require("./routes/searchResult.route");
+const wish__list__products__route = require("./routes/wishListProducts.route");
+const single__product__route = require("./routes/singleProduct.route");
+const categorize__products__route = require("./routes/categorizeProducts.route");
+const size__by__products__route = require("./routes/sizeByProducts.route");
+const products__by__price__route = require("./routes/productsByPrice.route");
 
 // MidleWere and request parser
 app.use(cors());
@@ -35,16 +37,18 @@ mongoose
   .then(() => console.log("Database connection successfully!"))
   .catch((err) => console.log(err));
 
-// application routes here
-app.use("/products", productsRoute); //all products
-app.use("/newArrivalProducts", newArrivalRoute); // new arrival products
-app.use("/saleProducts", saleProductsRoute); // discount / sale products
-app.use("/getFromCartList", cartProductsRoute); // cart list products
-app.use("/allOrders/myOrders", individualOrderRoute); // my orders products
-app.use("/products/searchedProducts", searchResultRoute); // search results products
-app.use("/getFromWishList", wishListProductsRoute); // wishList products
-app.use("/shop/singleProducts", singleProductRoute); // single view products
-app.use("/products", categorizeProductsRoute); // categorize products
+// application all routes here
+app.use("/products", products__route);
+app.use("/newArrivalProducts", new__arrival__route);
+app.use("/saleProducts", sale__products__route);
+app.use("/getFromCartList", cart__products__route);
+app.use("/allOrders/myOrders", individual__order__route);
+app.use("/products/searchedProducts", search__result__route);
+app.use("/getFromWishList", wish__list__products__route);
+app.use("/shop/singleProducts", single__product__route);
+app.use("/products", categorize__products__route);
+app.use("/products/sizedProducts", size__by__products__route);
+app.use("/products/filteredProducts", products__by__price__route);
 
 // Check server is running or not
 app.get("/", (req, res) => {
@@ -52,10 +56,10 @@ app.get("/", (req, res) => {
 });
 
 // 404 not found route here
-app.use(notFoundRoute);
+app.use(not__found__route);
 
 // common error handler here
-app.use(errorHandler);
+app.use(error__handler);
 
 // Listen server what we do here
 app.listen(PORT, () => {
