@@ -4,7 +4,7 @@ const carted__productsSchema = mongoose.Schema({
   cartedProduct: {
     type: Object,
     trim: true,
-    required: true,
+    require: true,
   },
   size: {
     type: String,
@@ -17,7 +17,7 @@ const carted__productsSchema = mongoose.Schema({
   userEmail: {
     type: String,
     trim: true,
-    required: true,
+    require: true,
     lowercase: true,
   },
 });

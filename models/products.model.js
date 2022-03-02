@@ -4,7 +4,7 @@ const productsSchema = mongoose.Schema({
   productTitle: {
     type: String,
     trim: true,
-    required: true,
+    require: true,
   },
   category: {
     type: String,
@@ -17,7 +17,7 @@ const productsSchema = mongoose.Schema({
   regularPrice: {
     type: String,
     trim: true,
-    required: true,
+    require: true,
   },
   salePrice: {
     type: String,
@@ -25,7 +25,7 @@ const productsSchema = mongoose.Schema({
   },
   thumbnail: {
     type: String,
-    required: true,
+    require: true,
   },
   thumbnails: {
     type: Array,

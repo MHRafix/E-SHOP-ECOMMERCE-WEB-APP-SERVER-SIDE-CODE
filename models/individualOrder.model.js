@@ -3,27 +3,27 @@ const mongoose = require("mongoose");
 const orderSchema = mongoose.Schema({
   orderedProducts: {
     type: Array,
-    required: true,
+    require: true,
   },
   customerInfo: {
     type: Object,
-    required: true,
+    require: true,
   },
   userEmail: {
     type: String,
-    required: true,
+    require: true,
     trim: true,
     lowercase: true,
   },
   grandTotalPrice: {
     type: String,
     trim: true,
-    required: true,
+    require: true,
   },
   status: {
     type: String,
     enum: ["PENDDING", "COMPLETED", "PAID"],
-    required: true,
+    require: true,
   },
 });
 

@@ -12,6 +12,8 @@ const {
   error__handler,
 } = require("./middleware/common/errorHandler");
 const products__route = require("./routes/products.route");
+
+// all get api request route import here
 const new__arrival__route = require("./routes/newArrival.route");
 const sale__products__route = require("./routes/saleProducts.route");
 const cart__products__route = require("./routes/cartProducts.route");
@@ -22,6 +24,10 @@ const single__product__route = require("./routes/singleProduct.route");
 const categorize__products__route = require("./routes/categorizeProducts.route");
 const size__by__products__route = require("./routes/sizeByProducts.route");
 const products__by__price__route = require("./routes/productsByPrice.route");
+
+// all post api route import here
+const add__products__to__cart = require("./routes/addToCartList.route");
+const add__order__to__database = require("./routes/allOrders.route");
 
 // MidleWere and request parser
 app.use(cors());
@@ -38,6 +44,8 @@ mongoose
   .catch((err) => console.log(err));
 
 // application all routes here
+
+// all get api routes here
 app.use("/products", products__route);
 app.use("/newArrivalProducts", new__arrival__route);
 app.use("/saleProducts", sale__products__route);
@@ -49,6 +57,11 @@ app.use("/shop/singleProducts", single__product__route);
 app.use("/products", categorize__products__route);
 app.use("/products/sizedProducts", size__by__products__route);
 app.use("/products/filteredProducts", products__by__price__route);
+
+// all post api here
+app.use("/addToCartList", add__products__to__cart);
+// app.use("/addToWishList", add__products__to__wishlist);
+app.use("/allCustomersOrders", add__order__to__database);
 
 // Check server is running or not
 app.get("/", (req, res) => {
