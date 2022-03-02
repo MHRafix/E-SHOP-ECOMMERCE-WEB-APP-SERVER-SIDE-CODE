@@ -35,8 +35,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // database connection here
+const MONGODB__CONNECTION__STRING = `mongodb+srv://${process.env.DB__USER}:${process.env.DB__PASS}@cluster0.ttpfp.mongodb.net/ESHOP?retryWrites=true&w=majority/`;
 mongoose
-  .connect(process.env.MONGODB__CONNECTION__STRING, {
+  .connect(MONGODB__CONNECTION__STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
