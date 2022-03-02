@@ -1,5 +1,5 @@
 // internal imports are here
-const wishlist__products = require("../models/wishlistproducts.model");
+const wishlist__products = require("../models/wishlistProducts.model");
 
 // get products api controller here
 exports.get__wish__list__products = async (req, res, next) => {
